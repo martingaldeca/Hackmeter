@@ -1,0 +1,14 @@
+UserConfiguration:
+  username: 'USERNAME'
+  password: 'PASSWORD'
+DatesConfiguration:
+  startDay: '2022-06-01'
+Holidays: []
+TimeTables:
+  390: [
+    ['08:30', '15:00'],
+  ]
+  450: [
+    ['08:30', '14:00'],
+    ['15:00', '17:00']
+  ]
