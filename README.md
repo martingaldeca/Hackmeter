@@ -13,6 +13,7 @@ Don't worry, Hackmeter, your ideal tool, is here!
 Just need the following:
 * Python3
 * Poetry
+* Pipenv
 
 ## Configuration
 
@@ -35,8 +36,10 @@ TimeTables:
 ```
 
 ## Running the program
-Once you have installed python3 and poetry and all the configuration done, just go to the project folder and run the following command:
+Once you have installed python3, poetry and pipenv and all the configuration done, must create a virtual env and install all the project dependencies to execute the ~order 66~ hack:
 ```shell
+pipenv shell
+poetry install
 poetry run hack
 ```
 
