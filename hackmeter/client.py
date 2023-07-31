@@ -102,22 +102,20 @@ class WorkmeterClient:
             f'enddate={end_day.strftime(DATE_FORMAT)}&fillblanks=true',
             headers=self.headers
         )
-        if response.status_code == 200:
-            logging.info(f'Day report obtained for {day.isoformat()}')
-            day_report = json.loads(response.content.decode())
-            for report in day_report:
-
-                # TODO in the future calculate the reported time and optimize the reports
-                date_reported = report['date']
-                date_reported = f'{date_reported[6:]}-{date_reported[3:5]}-{date_reported[:2]}'
-                if report.get('tasks') and date_reported not in self.reported_days:
-                    self.reported_days.append(date_reported)
-                    logging.info(f'Day {date_reported} was previously reported')
-
-            self.reported_days = list(set(self.reported_days))
-
-        else:
+        if response.status_code != 200:
             raise Exception(f'Day {day.isoformat()} problem.')
+        logging.info(f'Day report obtained for {day.isoformat()}')
+        day_report = json.loads(response.content.decode())
+        for report in day_report:
+
+            # TODO in the future calculate the reported time and optimize the reports
+            date_reported = report['date']
+            date_reported = f'{date_reported[6:]}-{date_reported[3:5]}-{date_reported[:2]}'
+            if report.get('tasks') and date_reported not in self.reported_days:
+                self.reported_days.append(date_reported)
+                logging.info(f'Day {date_reported} was previously reported')
+
+        self.reported_days = list(set(self.reported_days))
 
     def get_reported_days(
         self,
@@ -136,19 +134,18 @@ class WorkmeterClient:
             f'{self.base_url}/api/Calendar/{year}/User/{self.userid}',
             headers=self.headers
         )
-        if response.status_code == 200:
-            logging.info(f'Calendar obtained for year {year}')
-            calendar = json.loads(response.content.decode())
-            for day in calendar:
-                if (
-                    (expected_day := day['date'][:10]) and
-                    until.isoformat() >= expected_day >= self.start_day.isoformat() and
-                    expected_day not in self.holidays and
-                    (expected_minutes := day.get('expected'))
-                ):
-                    self.expected_days[day['date'][:10]] = expected_minutes
-        else:
+        if response.status_code != 200:
             raise Exception(f'Error obtaining calendar for year "{year}".')
+        logging.info(f'Calendar obtained for year {year}')
+        calendar = json.loads(response.content.decode())
+        for day in calendar:
+            if (
+                (expected_day := day['date'][:10]) and
+                until.isoformat() >= expected_day >= self.start_day.isoformat() and
+                expected_day not in self.holidays and
+                (expected_minutes := day.get('expected'))
+            ):
+                self.expected_days[day['date'][:10]] = expected_minutes
 
     def report(self):
         logging.info('Reporting all ')
