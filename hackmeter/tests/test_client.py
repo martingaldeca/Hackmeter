@@ -55,7 +55,7 @@ class ClientTest(TestCase):
             mock_post.return_value = response
             client.login(username=self.username, password=self.password)
             self.assertEqual(client.token, 'test_token')
-            self.assertEqual(client.headers['Authorization'], f'Bearer test_token')
+            self.assertEqual(client.headers['Authorization'], 'Bearer test_token')
 
     def test_login_status_code_not_200_raise_exception(self):
         client = WorkmeterClient(
